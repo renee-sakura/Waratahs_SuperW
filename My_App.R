@@ -867,8 +867,74 @@ ui <- dashboardPage(skin = "blue",dashboardHeader(title = tags$span(style="displ
                                                                                          div(class="chart-card-title","Full Player Metrics Table — click any column header to sort"),
                                                                                          DTOutput("ts_table")))),
                                                                  tags$br()
-                                                        ) # end tabPanel("This Season")
-                                                        
+                                                        ), # end tabPanel("This Season")
+
+                                                        # ---- Comparing Athletes - Averages ----
+                                                        tabPanel("Comparing Athletes - Averages", tags$br(),
+                                                                 fluidRow(
+                                                                   column(4, selectInput("ath_avg_filter", label="Filter players:",
+                                                                                         choices=NULL, width="100%")),
+                                                                   column(8, selectizeInput("ath_avg_custom", label="Select players:",
+                                                                                            choices=NULL, multiple=TRUE, width="100%",
+                                                                                            options=list(placeholder="Choose players...", plugins=list("remove_button"))))
+                                                                 ),
+                                                                 fluidRow(column(12, div(class="chart-card",
+                                                                                         div(class="chart-card-title","Distance per Week"),
+                                                                                         plotlyOutput("ath_avg_dist_plot", height="320px")))),
+                                                                 fluidRow(
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","High Speed Distance per Week"),
+                                                                                 plotlyOutput("ath_avg_hsd_plot", height="280px"))),
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Very High Speed Distance per Week"),
+                                                                                 plotlyOutput("ath_avg_vhsd_plot", height="280px")))),
+                                                                 fluidRow(
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Meterage per Minute per Week"),
+                                                                                 plotlyOutput("ath_avg_mmin_plot", height="280px"))),
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","HML Distance per Week"),
+                                                                                 plotlyOutput("ath_avg_hml_plot", height="280px")))),
+                                                                 fluidRow(
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Max Velocity per Week"),
+                                                                                 plotlyOutput("ath_avg_maxvel_plot", height="280px"))),
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Accel Counts per Week"),
+                                                                                 plotlyOutput("ath_avg_accels_plot", height="280px")))),
+                                                                 tags$br()
+                                                        ),
+
+                                                        # ---- Comparing Athletes - Totals ----
+                                                        tabPanel("Comparing Athletes - Totals", tags$br(),
+                                                                 fluidRow(column(12,
+                                                                                 div(class="totals-notice", onclick="Shiny.setInputValue('show_ath_sessions_modal', Math.random())",
+                                                                                     span(class="totals-notice-icon", "⚠️"),
+                                                                                     span(class="totals-notice-text", "Please keep in mind that not all athletes attended the same number of trainings each week."),
+                                                                                     span(class="totals-notice-link", "Click to see training attendance per athlete →"))
+                                                                 )),
+                                                                 fluidRow(
+                                                                   column(4, selectInput("ath_tot_filter", label="Filter players:",
+                                                                                         choices=NULL, width="100%")),
+                                                                   column(8, selectizeInput("ath_tot_custom", label="Select players:",
+                                                                                            choices=NULL, multiple=TRUE, width="100%",
+                                                                                            options=list(placeholder="Choose players...", plugins=list("remove_button"))))
+                                                                 ),
+                                                                 fluidRow(column(12, div(class="chart-card",
+                                                                                         div(class="chart-card-title","Total Distance per Week"),
+                                                                                         plotlyOutput("ath_tot_dist_plot", height="320px")))),
+                                                                 fluidRow(
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Total High Speed Distance per Week"),
+                                                                                 plotlyOutput("ath_tot_hsd_plot", height="280px"))),
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Total Very High Speed Distance per Week"),
+                                                                                 plotlyOutput("ath_tot_vhsd_plot", height="280px")))),
+                                                                 fluidRow(
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Meterage per Minute per Week"),
+                                                                                 plotlyOutput("ath_tot_mmin_plot", height="280px"))),
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Total HML Distance per Week"),
+                                                                                 plotlyOutput("ath_tot_hml_plot", height="280px")))),
+                                                                 fluidRow(
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Peak Max Velocity per Week"),
+                                                                                 plotlyOutput("ath_tot_maxvel_plot", height="280px"))),
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Total Accel Counts per Week"),
+                                                                                 plotlyOutput("ath_tot_accels_plot", height="280px")))),
+                                                                 tags$br()
+                                                        )
+
                                             ) # end tabsetPanel by_player_inner
                                     ),       # end tabItem by_player
                                     
@@ -894,14 +960,14 @@ ui <- dashboardPage(skin = "blue",dashboardHeader(title = tags$span(style="displ
                                                                                          div(class="chart-card-title","Average Distance by Session"),
                                                                                          plotOutput("indiv_dist_plot", height="280px")))),
                                                                  fluidRow(
-                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Accel Count by Session"),              plotOutput("indiv_accel_plot",  height="260px"))),
-                                                                   column(6, div(class="chart-card", div(class="chart-card-title","HML Distance by Session"),             plotOutput("indiv_hml_plot",    height="260px")))),
-                                                                 fluidRow(
                                                                    column(6, div(class="chart-card", div(class="chart-card-title","High Speed Distance by Session"),      plotOutput("indiv_hsd_plot",    height="260px"))),
                                                                    column(6, div(class="chart-card", div(class="chart-card-title","Very High Speed Distance by Session"), plotOutput("indiv_vhsd_plot",   height="260px")))),
                                                                  fluidRow(
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Meterage per Minute by Session"),      plotOutput("indiv_mmin_plot",   height="260px"))),
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","HML Distance by Session"),             plotOutput("indiv_hml_plot",    height="260px")))),
+                                                                 fluidRow(
                                                                    column(6, div(class="chart-card", div(class="chart-card-title","Max Velocity by Session"),             plotOutput("indiv_maxvel_plot", height="260px"))),
-                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Meterage per Minute by Session"),      plotOutput("indiv_mmin_plot",   height="260px")))),
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Accel Count by Session"),              plotOutput("indiv_accel_plot",  height="260px")))),
                                                                  tags$br()
                                                         ),
                                                         # ---- Comparing Weeks - Average ----
@@ -920,14 +986,14 @@ ui <- dashboardPage(skin = "blue",dashboardHeader(title = tags$span(style="displ
                                                                                          div(class="chart-card-title","Distance per Week"),
                                                                                          plotOutput("week_dist_plot", height="280px")))),
                                                                  fluidRow(
-                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Player Load per Week"),              plotOutput("week_load_plot",   height="260px"))),
-                                                                   column(6, div(class="chart-card", div(class="chart-card-title","HML Distance per Week"),             plotOutput("week_hml_plot",    height="260px")))),
-                                                                 fluidRow(
                                                                    column(6, div(class="chart-card", div(class="chart-card-title","High Speed Distance per Week"),      plotOutput("week_hsd_plot",    height="260px"))),
                                                                    column(6, div(class="chart-card", div(class="chart-card-title","Very High Speed Distance per Week"), plotOutput("week_vhsd_plot",   height="260px")))),
                                                                  fluidRow(
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Meterage per Minute per Week"),      plotOutput("week_mmin_plot",   height="260px"))),
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","HML Distance per Week"),             plotOutput("week_hml_plot",    height="260px")))),
+                                                                 fluidRow(
                                                                    column(6, div(class="chart-card", div(class="chart-card-title","Max Velocity per Week"),             plotOutput("week_maxvel_plot", height="260px"))),
-                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Meterage per Minute per Week"),      plotOutput("week_mmin_plot",   height="260px")))),
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Accel Counts per Week"),             plotOutput("week_accels_plot", height="260px")))),
                                                                  tags$br()
                                                         ),
                                                         
@@ -953,77 +1019,20 @@ ui <- dashboardPage(skin = "blue",dashboardHeader(title = tags$span(style="displ
                                                                                          div(class="chart-card-title","Total Distance per Week"),
                                                                                          plotOutput("week_tot_dist_plot", height="280px")))),
                                                                  fluidRow(
-                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Total Player Load per Week"),              plotOutput("week_tot_load_plot",   height="260px"))),
-                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Total HML Distance per Week"),             plotOutput("week_tot_hml_plot",    height="260px")))),
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Total High Speed Distance per Week"),      plotOutput("week_tot_hsd_plot",     height="260px"))),
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Total Very High Speed Distance per Week"), plotOutput("week_tot_vhsd_plot",    height="260px")))),
                                                                  fluidRow(
-                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Total High Speed Distance per Week"),      plotOutput("week_tot_hsd_plot",    height="260px"))),
-                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Total Very High Speed Distance per Week"), plotOutput("week_tot_vhsd_plot",   height="260px")))),
-                                                                 tags$br()
-                                                        ),
-                                                        
-                                                        # ---- Comparing Athletes - Averages ----
-                                                        tabPanel("Comparing Athletes - Averages", tags$br(),
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Meterage per Minute per Week"),             plotOutput("week_tot_mmin_plot",    height="260px"))),
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Total HML Distance per Week"),              plotOutput("week_tot_hml_plot",     height="260px")))),
                                                                  fluidRow(
-                                                                   column(4, selectInput("ath_avg_filter", label="Filter players:",
-                                                                                         choices=NULL, width="100%")),
-                                                                   column(8, selectizeInput("ath_avg_custom", label="Select players:",
-                                                                                            choices=NULL, multiple=TRUE, width="100%",
-                                                                                            options=list(placeholder="Choose players...", plugins=list("remove_button"))))
-                                                                 ),
-                                                                 fluidRow(column(12, div(class="chart-card",
-                                                                                         div(class="chart-card-title","Distance per Week"),
-                                                                                         plotlyOutput("ath_avg_dist_plot", height="320px")))),
-                                                                 fluidRow(
-                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Player Load per Week"),
-                                                                                 plotlyOutput("ath_avg_load_plot", height="280px"))),
-                                                                   column(6, div(class="chart-card", div(class="chart-card-title","HML Distance per Week"),
-                                                                                 plotlyOutput("ath_avg_hml_plot", height="280px")))),
-                                                                 fluidRow(
-                                                                   column(6, div(class="chart-card", div(class="chart-card-title","High Speed Distance per Week"),
-                                                                                 plotlyOutput("ath_avg_hsd_plot", height="280px"))),
-                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Very High Speed Distance per Week"),
-                                                                                 plotlyOutput("ath_avg_vhsd_plot", height="280px")))),
-                                                                 fluidRow(
-                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Max Velocity per Week"),
-                                                                                 plotlyOutput("ath_avg_maxvel_plot", height="280px"))),
-                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Meterage per Minute per Week"),
-                                                                                 plotlyOutput("ath_avg_mmin_plot", height="280px")))),
-                                                                 tags$br()
-                                                        ),
-                                                        
-                                                        # ---- Comparing Athletes - Totals ----
-                                                        tabPanel("Comparing Athletes - Totals", tags$br(),
-                                                                 fluidRow(column(12,
-                                                                                 div(class="totals-notice", onclick="Shiny.setInputValue('show_ath_sessions_modal', Math.random())",
-                                                                                     span(class="totals-notice-icon", "\u26a0\ufe0f"),
-                                                                                     span(class="totals-notice-text", "Please keep in mind that not all athletes attended the same number of trainings each week."),
-                                                                                     span(class="totals-notice-link", "Click to see training attendance per athlete \u2192"))
-                                                                 )),
-                                                                 fluidRow(
-                                                                   column(4, selectInput("ath_tot_filter", label="Filter players:",
-                                                                                         choices=NULL, width="100%")),
-                                                                   column(8, selectizeInput("ath_tot_custom", label="Select players:",
-                                                                                            choices=NULL, multiple=TRUE, width="100%",
-                                                                                            options=list(placeholder="Choose players...", plugins=list("remove_button"))))
-                                                                 ),
-                                                                 fluidRow(column(12, div(class="chart-card",
-                                                                                         div(class="chart-card-title","Total Distance per Week"),
-                                                                                         plotlyOutput("ath_tot_dist_plot", height="320px")))),
-                                                                 fluidRow(
-                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Total Player Load per Week"),
-                                                                                 plotlyOutput("ath_tot_load_plot", height="280px"))),
-                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Total HML Distance per Week"),
-                                                                                 plotlyOutput("ath_tot_hml_plot", height="280px")))),
-                                                                 fluidRow(
-                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Total High Speed Distance per Week"),
-                                                                                 plotlyOutput("ath_tot_hsd_plot", height="280px"))),
-                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Total Very High Speed Distance per Week"),
-                                                                                 plotlyOutput("ath_tot_vhsd_plot", height="280px")))),
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Peak Max Velocity per Week"),               plotOutput("week_tot_maxvel_plot",  height="260px"))),
+                                                                   column(6, div(class="chart-card", div(class="chart-card-title","Total Accel Counts per Week"),              plotOutput("week_tot_accels_plot",  height="260px")))),
                                                                  tags$br()
                                                         )
-                                            )
-                                    ),
-                                    
+
+                                            ) # end tabsetPanel by_week_inner
+                                    ),       # end tabItem by_week
+
                                     tabItem(tabName="hml",
                                             fluidRow(column(12, div(class="section-header","High Metabolic Load Distance"))),
                                             uiOutput("hml_kpi_row"),
@@ -1743,6 +1752,7 @@ server <- function(input, output, session) {
     tbl <- df %>%
       mutate(`Player Name` = ext_mark(`Player Name`)) %>%
       select(all_of(cols_present)) %>% arrange(`Player Name`) %>%
+      mutate(Forward_Back = str_to_title(Forward_Back)) %>%
       rename_with(~gsub(" \\(Session\\)","",.x)) %>%
       rename("Player"=`Player Name`,"Group"=Forward_Back,"Dist (m)"=`Average Distance`,
              "m/min"=`Meterage Per Minute`,"HML (m)"=`High Metabolic Load Distance`,
@@ -1755,7 +1765,7 @@ server <- function(input, output, session) {
                            columnDefs=list(list(className="dt-center",targets="_all"))),
               class="compact stripe hover") %>%
       formatStyle("Group",
-                  backgroundColor=styleEqual(c("forward","back","Forward","Back"),c("#DFF0FB","#FFF3DC","#DFF0FB","#FFF3DC")),
+                  backgroundColor=styleEqual(c("Forward","Back"),c("#DFF0FB","#FFF3DC")),
                   fontWeight="bold") %>%
       formatStyle(names(tbl)[3:ncol(tbl)],color=NAVY,fontWeight="600")
   })
@@ -2607,13 +2617,14 @@ server <- function(input, output, session) {
       )
   })
   
-  # Populate Individual Week dropdown from available weeks in data
+  # Populate Individual Week dropdown — most recent first, labelled "Week N"
   observe({
     df <- week_base(); req(nrow(df)>0)
-    wks <- df %>% distinct(Week, week_num) %>% arrange(week_num) %>%
-      mutate(label=paste0("Preseason Week ", week_num))
+    wks <- df %>% distinct(Week, week_num) %>% arrange(desc(week_num)) %>%
+      mutate(label = paste0("Week ", week_num))
     updateSelectInput(session, "indiv_week_sel",
-                      choices=setNames(wks$Week, wks$label), selected=wks$Week[1])
+                      choices  = setNames(wks$Week, wks$label),
+                      selected = wks$Week[1])   # most recent
   })
   
   # Helper: which column to colour/group by
@@ -2762,12 +2773,12 @@ server <- function(input, output, session) {
     week_line_plot(df, col, y_label, week_col_var(vb), vb)
   }
   output$week_dist_plot   <- renderPlot({ cw_plot("Avg_Distance","Distance (m)")        }, bg=CARD_BG)
-  output$week_load_plot   <- renderPlot({ cw_plot("Avg_Load",    "Player Load (AU)")    }, bg=CARD_BG)
-  output$week_hml_plot    <- renderPlot({ cw_plot("Avg_HML",     "HML Distance (m)")    }, bg=CARD_BG)
   output$week_hsd_plot    <- renderPlot({ cw_plot("Avg_HSD",     "HSD (m)")             }, bg=CARD_BG)
   output$week_vhsd_plot   <- renderPlot({ cw_plot("Avg_VHSD",    "VHSD (m)")            }, bg=CARD_BG)
-  output$week_maxvel_plot <- renderPlot({ cw_plot("Avg_MaxVel",  "Max Velocity (m/s)")  }, bg=CARD_BG)
   output$week_mmin_plot   <- renderPlot({ cw_plot("Avg_MMin",    "m/min")               }, bg=CARD_BG)
+  output$week_hml_plot    <- renderPlot({ cw_plot("Avg_HML",     "HML Distance (m)")    }, bg=CARD_BG)
+  output$week_maxvel_plot <- renderPlot({ cw_plot("Avg_MaxVel",  "Max Velocity (m/s)")  }, bg=CARD_BG)
+  output$week_accels_plot <- renderPlot({ cw_plot("Avg_Accels",  "Accel Efforts (B1-3)")}, bg=CARD_BG)
   
   # ---- Training days per week modal ----
   observeEvent(input$show_week_sessions_modal, {
@@ -2866,12 +2877,12 @@ server <- function(input, output, session) {
     week_line_plot(df, col, y_label, week_col_var(vb), vb)
   }
   output$week_tot_dist_plot   <- renderPlot({ ct_plot("Avg_Distance","Total Distance (m)")        }, bg=CARD_BG)
-  output$week_tot_load_plot   <- renderPlot({ ct_plot("Avg_Load",    "Total Player Load (AU)")    }, bg=CARD_BG)
-  output$week_tot_hml_plot    <- renderPlot({ ct_plot("Avg_HML",     "Total HML Distance (m)")    }, bg=CARD_BG)
   output$week_tot_hsd_plot    <- renderPlot({ ct_plot("Avg_HSD",     "Total HSD (m)")             }, bg=CARD_BG)
   output$week_tot_vhsd_plot   <- renderPlot({ ct_plot("Avg_VHSD",    "Total VHSD (m)")            }, bg=CARD_BG)
-  output$week_tot_maxvel_plot <- renderPlot({ ct_plot("Avg_MaxVel",  "Peak Max Velocity (m/s)")   }, bg=CARD_BG)
   output$week_tot_mmin_plot   <- renderPlot({ ct_plot("Avg_MMin",    "Avg m/min")                 }, bg=CARD_BG)
+  output$week_tot_hml_plot    <- renderPlot({ ct_plot("Avg_HML",     "Total HML Distance (m)")    }, bg=CARD_BG)
+  output$week_tot_maxvel_plot <- renderPlot({ ct_plot("Avg_MaxVel",  "Peak Max Velocity (m/s)")   }, bg=CARD_BG)
+  output$week_tot_accels_plot <- renderPlot({ ct_plot("Avg_Accels",  "Total Accel Efforts (B1-3)")}, bg=CARD_BG)
   
   # Individual Week plots
   iw_plot <- function(col, y_label) {
@@ -3003,7 +3014,8 @@ server <- function(input, output, session) {
   output$ath_avg_vhsd_plot   <- renderPlotly({ aa_plot("Avg_VHSD",     "VHSD (m)")           })
   output$ath_avg_maxvel_plot <- renderPlotly({ aa_plot("Avg_MaxVel",   "Max Velocity (m/s)") })
   output$ath_avg_mmin_plot   <- renderPlotly({ aa_plot("Avg_MMin",     "m/min")              })
-  
+  output$ath_avg_accels_plot <- renderPlotly({ aa_plot("Avg_Accels",   "Accel Efforts (B1-3)") })
+
   # Comparing Athletes - Totals plots
   at_plot <- function(col, y_label) {
     players <- input$ath_tot_custom
@@ -3018,6 +3030,7 @@ server <- function(input, output, session) {
   output$ath_tot_vhsd_plot   <- renderPlotly({ at_plot("Avg_VHSD",     "Total VHSD (m)")           })
   output$ath_tot_maxvel_plot <- renderPlotly({ at_plot("Avg_MaxVel",   "Peak Max Velocity (m/s)")  })
   output$ath_tot_mmin_plot   <- renderPlotly({ at_plot("Avg_MMin",     "Avg m/min")                })
+  output$ath_tot_accels_plot <- renderPlotly({ at_plot("Avg_Accels",   "Total Accel Efforts (B1-3)") })
   
   # PREDICTIONS — Recovering Athletes ========================
   recover_metrics <- data.frame(
